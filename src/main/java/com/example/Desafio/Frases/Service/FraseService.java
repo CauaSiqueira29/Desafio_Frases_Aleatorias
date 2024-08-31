@@ -19,11 +19,16 @@ public class FraseService {
     public FraseDto retornaFraseAleatoria(){
         List<FraseModel> frases = repository.findAll();
 
+        if(frases.isEmpty()){
+            throw new NoSuchElementException("Não foi encontrada nenhuma frase");
+        }
+
         return frases.stream()
                 .skip(new Random().nextInt(frases.size()))
                 .findFirst()
-                .map(f -> new FraseDto(f.getTitulo(), f.getFrase(), f.getPersonagem(), f.getPoster()))
-                .orElseThrow(() -> new NoSuchElementException("Não foi encontrada nenhuma frase"));
+                .map(f -> new FraseDto(f.getTitulo(), f.getFrase(),
+                        f.getPersonagem(), f.getPoster()))
+                .get();
     }
 
     public FraseDto cadastrarFrase(FraseDto data){
